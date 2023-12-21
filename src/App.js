@@ -6,7 +6,6 @@ import Nav from './components/Nav';
 import StudentPage from './components/StudentPage';
 import TeacherPage from './components/TeacherPage';
 
-
 function App() {
   return (
     <BrowserRouter>
