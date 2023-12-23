@@ -4,6 +4,33 @@ import { Op } from 'sequelize'
 
 //Controller example with SQLite Database => Sequelize Querying
 
+export const loginUser = async (req, res, next) => {
+  const { email: userEmail, password: userPassword } = req.body;
+
+  try {
+    // Validate email and password (add more validation as needed)
+    if (!userEmail || !userPassword) {
+      return res.status(400).json({ error: 'Email and password are required.' });
+    }
+
+    // Find the user by email
+    const user = await User.findOne({ where: { email: userEmail } });
+
+    // Check if the user exists and the password is correct (add your password hashing logic)
+    if (!user || user.password !== userPassword) {
+      return res.status(401).json({ error: 'Invalid email or password.' });
+    }
+
+    // Successful login, return the user object (excluding sensitive information)
+    const { id, name, email, account_type, student_number } = user;
+    res.json({ id, name, email, account_type, student_number });
+  } catch (error) {
+    console.error('Error during login:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+    // Optionally, call next(error) to pass control to the next middleware
+  }
+};
+
 // get all users
 const getAllUsersFromDB = async (req, res) => {
   try {

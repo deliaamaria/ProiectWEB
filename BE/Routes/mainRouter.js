@@ -16,12 +16,76 @@ router.get("/users/:usersId", usersController.getUsersFromDBById);
 router.put("/users/:usersId", usersController.updateUsersById); // update is associated to the HTTP PUT method
 router.delete("/users/:usersId", usersController.deleteUsers); // delete is associated to the HTTP DELETE method
 
+// Login route
+router.post('/login', usersController.loginUser);
 
+router.post('/dissertation-request/send', async (req, res) => {
+  const { student_id, teacher_id, title } = req.body;
+
+  try {
+    // Validate the required fields
+    if (!student_id || !teacher_id || !title) {
+      return res.status(400).json({ error: 'Student_id, teacher_id, and title are required.' });
+    }
+
+    // Fetch user information for student and teacher from the database
+    const student = await User.findByPk(student_id);
+    const teacher = await User.findByPk(teacher_id);
+
+    // Check if student and teacher exist
+    if (!student || !teacher) {
+      return res.status(404).json({ error: 'Student or teacher not found.' });
+    }
+
+    // Create a dissertation_request object
+    const dissertationRequest = await Dissertation_request.create({
+      student_name: student.name,
+      teacher_name: teacher.name,
+      title,
+      status: 'in asteptare', // Set an initial status
+    });
+
+    // Return the created dissertation_request object
+    res.json(dissertationRequest);
+  } catch (error) {
+    console.error('Error creating dissertation_request:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+router.post('/dissertation-request/update-status', async (req, res) => {
+  const { id, status } = req.body;
+
+  try {
+    // Validate the required fields
+    if (!id || !status) {
+      return res.status(400).json({ error: 'ID and status are required.' });
+    }
+
+    // Find the dissertation_request by ID
+    const dissertationRequest = await Dissertation_request.findByPk(id);
+
+    // Check if the dissertation_request exists
+    if (!dissertationRequest) {
+      return res.status(404).json({ error: 'Dissertation_request not found.' });
+    }
+
+    // Update the status directly
+    await dissertationRequest.update({ status });
+
+    // Return the updated dissertation_request object
+    res.json(dissertationRequest);
+  } catch (error) {
+    console.error('Error updating dissertation_request status:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
 
 //ALTA VARIANTA
 
 // Mount the usersRouter => all the routes defined there will start
 // with /users/..
+
 
 router.use("/users1", userRouter);
 
