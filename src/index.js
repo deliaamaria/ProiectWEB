@@ -1,10 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App.js';
-import reportWebVitals from './reportWebVitals.js';
-import Login from './components/Login.js';
-import Nav from './components/Nav.js';
+import App from './App';
+import reportWebVitals from './reportWebVitals';
+import Login from './components/Login';
+import Nav from './components/Nav';
 import "./css/main.css"
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
