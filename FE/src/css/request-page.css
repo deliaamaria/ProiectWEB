@@ -1,4 +1,4 @@
-.teacher-list-span {
+.student-list-span, .teacher-list-span {
     display: inline-block;
     width: 20vw;
     padding: 0.3rem;
@@ -19,6 +19,7 @@ li {
 }
 
 .button-30, h1 {
+  margin: 1px;
   align-items: center;
   appearance: none;
   background-color: #FCFCFD;
