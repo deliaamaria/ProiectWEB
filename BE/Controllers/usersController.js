@@ -1,8 +1,33 @@
 import { User } from '../models/user.js'
-import { Dissertation_request } from '../models/dissertation_request.js'
-import { Op } from 'sequelize'
 
 //Controller example with SQLite Database => Sequelize Querying
+
+export const loginUser = async (req, res, next) => {
+  const { email: userEmail, password: userPassword } = req.body;
+
+  try {
+    // Validate email and password (add more validation as needed)
+    if (!userEmail || !userPassword) {
+      return res.status(400).json({ error: 'Email and password are required.' });
+    }
+
+    // Find the user by email
+    const user = await User.findOne({ where: { email: userEmail } });
+
+    // Check if the user exists and the password is correct (add your password hashing logic)
+    if (!user || user.password !== userPassword) {
+      return res.status(401).json({ error: 'Invalid email or password.' });
+    }
+
+    // Successful login, return the user object (excluding sensitive information)
+    const { id, name, email, account_type, student_number } = user;
+    res.json({ id, name, email, account_type, student_number });
+  } catch (error) {
+    console.error('Error during login:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+    // Optionally, call next(error) to pass control to the next middleware
+  }
+};
 
 // get all users
 const getAllUsersFromDB = async (req, res) => {
@@ -34,7 +59,7 @@ const getAllUsersNamesFromDB = async (req, res) => {
 // the ID is the primary key => findByPk() sequelize method
 const getUsersFromDBById = async (req, res) => {
   try {
-    const user = await Users.findByPk(req.params.userId) // find by primary key => findByPK()
+    const user = await User.findByPk(req.params.userId) // find by primary key => findByPK()
     if (user) {
       return res.status(200).json(user)
     } else {
@@ -62,7 +87,7 @@ const insertUsersIntoDB = async (req, res) => {
 //UPDATE
 const updateUsersById = async (req, res) => {
   try {
-    const user = await Users.findByPk(req.params.userId)
+    const user = await User.findByPk(req.params.userId)
     if (user) {
       const updatedUsers = await user.update(req.body) // update using the update() method provided by Sequelize on the returned PK object
       // OBS: update on the found object and not on the "Users" model
@@ -81,7 +106,7 @@ const updateUsersById = async (req, res) => {
 //DELETE
 const deleteUsers = async (req, res) => {
   try {
-    const user = await Users.findByPk(req.params.userId) // find by primary key => findByPK()
+    const user = await User.findByPk(req.params.userId) // find by primary key => findByPK()
     if (user) {
       // destroy() is mapped to "DELETE ... FROM ..."
       await user.destroy()
@@ -110,7 +135,7 @@ const filterUsersFromDB = async (req, res) => {
       whereClause.account_type = account_type;
     }
     
-    const users = await Users.findAll({
+    const users = await User.findAll({
       
       where: whereClause
     })
