@@ -2,10 +2,12 @@ import express from "express";
 import { sequelize } from "../sequelize.js";
 import { userRouter } from "./userRouter.js";
 import * as usersController from "../Controllers/usersController.js";
+import * as sessionController from "../Controllers/sessionController.js";
 import { User } from '../models/user.js'
 import { Dissertation_request } from '../models/dissertation_request.js'
 import * as dissertationRequestController from "../Controllers/dissertationRequestController.js";
 import { Session } from '../models/session.js';
+
 
 
 const router = express.Router();
@@ -24,6 +26,14 @@ router.post("/newRequest", dissertationRequestController.insertRequestsIntoDB);
 router.get("/dissertation_requests/:requestId", dissertationRequestController.getRequestsFromDBById);
 router.put("/dissertation_requests/:requestId", dissertationRequestController.updateRequestsById); // update is associated to the HTTP PUT method
 router.delete("/dissertation_requests/:requestId", dissertationRequestController.deleteRequests); // delete is associated to the HTTP DELETE method
+
+
+router.post("/NewSession", sessionController.createSession);
+router.get("/sessions", sessionController.getAllSessionsFromDB);
+router.get("/filterSessions", sessionController.filteSessionsFromDB);
+router.get("/sessions/:sessionsId", sessionController.getSessionsFromDBById);
+router.put("/sessions/:sessionsId", sessionController.updateSessionsById); // update is associated to the HTTP PUT method
+router.delete("/sessions/:sessionsId", sessionController.deleteSessions); // delete is associated to the HTTP DELETE method
 
 // Login route
 router.post('/login', usersController.loginUser);

@@ -11,10 +11,13 @@ const Session = sequelize.define(
             primaryKey: true
         },
         start_date: {
-            type: DataTypes.DATE
+            type: DataTypes.DATE,
+            defaultValue: DataTypes.NOW,
+            allowNull: false
         },
         end_date: {
-            type: DataTypes.DATE
+            type: DataTypes.DATE,
+            allowNull: false
         }       
     },
     {
