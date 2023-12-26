@@ -5,7 +5,7 @@ import { Session } from '../models/session';
 const createSession = async () => {
   try {
 
-    console.log('Sesiune creată cu succes:', newSession.toJSON());
+    console.log('Sesiune creată cu succes:');
   } catch (error) {
     console.error('Eroare la crearea sesiunii:', error);
   }
