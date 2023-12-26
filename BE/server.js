@@ -5,14 +5,16 @@ import { mainRouter } from './Routes/mainRouter.js'
 
 import { User } from './models/user.js'
 import { Dissertation_request } from './models/dissertation_request.js'
-
+import { Session } from './models/session.js'
 
 
 const app = express()
 
 // Define entities relationship
-User.hasMany(Dissertation_request,{ as: 'teacherRequests', foreignKey: 'teacher_id' });
-User.hasMany(Dissertation_request,{ as: 'studentRequests', foreignKey: 'student_id' });
+User.hasMany(Dissertation_request, { as: 'teacherRequests', foreignKey: 'teacher_id'});
+User.hasMany(Dissertation_request, { as: 'studentRequests', foreignKey: 'student_id'});
+User.hasMany(Session, { as: 'teacherSessions', foreignKey: 'teacher_id'});
+Dissertation_request.hasOne(Session);
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true}))

@@ -1,6 +1,4 @@
 import { User } from '../models/user.js'
-import { Dissertation_request } from '../models/dissertation_request.js'
-import { Op } from 'sequelize'
 
 //Controller example with SQLite Database => Sequelize Querying
 

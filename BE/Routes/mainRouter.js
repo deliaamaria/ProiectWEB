@@ -4,6 +4,8 @@ import { userRouter } from "./userRouter.js";
 import * as usersController from "../Controllers/usersController.js";
 import { User } from '../models/user.js'
 import { Dissertation_request } from '../models/dissertation_request.js'
+import * as dissertationRequestController from "../Controllers/dissertationRequestController.js";
+import { Session } from '../models/session.js';
 
 
 const router = express.Router();
@@ -15,6 +17,13 @@ router.post("/newUser", usersController.insertUsersIntoDB);
 router.get("/users/:usersId", usersController.getUsersFromDBById);
 router.put("/users/:usersId", usersController.updateUsersById); // update is associated to the HTTP PUT method
 router.delete("/users/:usersId", usersController.deleteUsers); // delete is associated to the HTTP DELETE method
+
+router.get("/dissertation_requests", dissertationRequestController.getAllRequestsFromDB);
+router.get("/filterRequests", dissertationRequestController.filterRequestsFromDB);
+router.post("/newRequest", dissertationRequestController.insertRequestsIntoDB);
+router.get("/dissertation_requests/:requestId", dissertationRequestController.getRequestsFromDBById);
+router.put("/dissertation_requests/:requestId", dissertationRequestController.updateRequestsById); // update is associated to the HTTP PUT method
+router.delete("/dissertation_requests/:requestId", dissertationRequestController.deleteRequests); // delete is associated to the HTTP DELETE method
 
 // Login route
 router.post('/login', usersController.loginUser);
