@@ -10,52 +10,11 @@ function StudentPage() {
       if (!user) {
         return;
       }
-        const teacherList = document.getElementById('available-teacher-list');
-        const teachers = [
-          {
-            name: 'Ion',
-            student_number: 35,
-          },
-          {
-            name: 'IONEL',
-            student_number: 0,
-          },
-          {
-            name: 'Gigel',
-            student_number: 14,
-          },
-        ];
-    
-        teacherList.innerHTML = "";
-        teachers.forEach((teacher) => {
-          const liElement = document.createElement('li');
+      fetchData();
 
-          const spanName = document.createElement('span');
-          spanName.innerHTML = teacher.name;
-          spanName.classList.add('teacher-list-span');
-          
-          const spanNumber = document.createElement('span');
-          spanNumber.innerHTML = teacher.student_number + ' locuri disponibile';
-          spanNumber.classList.add('teacher-list-span');
-
-          liElement.appendChild(spanName);
-          liElement.appendChild(spanNumber);
-
-          const sendRequestBtn = document.createElement("button");
-          sendRequestBtn.classList.add('button-30');
-          sendRequestBtn.innerHTML = "Trimite Cerere";
-          sendRequestBtn.addEventListener('click', openPopup);
-          liElement.appendChild(sendRequestBtn);
-          if (teacher.student_number === 0) {
-            sendRequestBtn.style.visibility = 'hidden';
-          }
-    
-          teacherList.appendChild(liElement);
-        });
-
-        const confirmSendBtn = document.getElementById('send-request-btn');
-        confirmSendBtn.addEventListener('click', sendRequest);
-      }, [])
+      const confirmSendBtn = document.getElementById('send-request-btn');
+      confirmSendBtn.addEventListener('click', sendRequest);
+    }, [])
 
       function openPopup() {
         document.getElementById('overlay').style.display = 'flex';
@@ -71,6 +30,58 @@ function StudentPage() {
         document.getElementById('overlay').style.display = 'none';
         document.getElementById('overlay-success').style.display = 'none';
       }
+
+      const fetchData = async () => {
+        try {
+          const response = await fetch('http://localhost:5000/api/filterUsers?account_type=profesor', {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json', 
+              } 
+          });
+    
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+    
+          const result = await response.json();
+          console.log(result);
+    
+          const teacherList = document.getElementById('available-teacher-list');
+          const teachers = result;
+          console.log(teachers);
+      
+          teacherList.innerHTML = "";
+          teachers.forEach((teacher) => {
+            const liElement = document.createElement('li');
+
+            const spanName = document.createElement('span');
+            spanName.innerHTML = teacher.name;
+            spanName.classList.add('teacher-list-span');
+            
+            const spanNumber = document.createElement('span');
+            spanNumber.innerHTML = teacher.student_number + ' locuri disponibile';
+            spanNumber.classList.add('teacher-list-span');
+
+            liElement.appendChild(spanName);
+            liElement.appendChild(spanNumber);
+
+            const sendRequestBtn = document.createElement("button");
+            sendRequestBtn.classList.add('button-30');
+            sendRequestBtn.innerHTML = "Trimite Cerere";
+            sendRequestBtn.addEventListener('click', openPopup);
+            liElement.appendChild(sendRequestBtn);
+            if (teacher.student_number === 0) {
+              sendRequestBtn.style.visibility = 'hidden';
+            }
+      
+            teacherList.appendChild(liElement);
+          });
+          
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        } 
+      };
 
       if (!user) {
         return <div>User not authenticated</div>;
