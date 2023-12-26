@@ -16,6 +16,7 @@ const User = sequelize.define(
         },
         email: {
             type: DataTypes.STRING,
+            unique:true,
             allowNull: false,
             validate: {
                 isEmail: true
@@ -23,12 +24,14 @@ const User = sequelize.define(
         },
         password: {
             type: DataTypes.STRING,
+            allowNull: false,
             validate: {
                 is: [/(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,20}/]
             }
         },
         account_type: {
             type: DataTypes.STRING,
+            allowNull: false,
             values: ["student", "profesor"],
         },
         student_number: {

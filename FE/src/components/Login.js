@@ -7,13 +7,45 @@ function Login() {
   const navigate = useNavigate();
   const { login } = useAuth();
 
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleClick = () => {
-    // Correct: useNavigate is called inside a React component
-    navigate('/student-page');
-    login(username);
+  const fetchData = async () => {
+    try {
+          const postData = {
+            email: email,
+            password: password
+          };
+
+          const response = await fetch('http://localhost:5000/api/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json', 
+          },
+          body: JSON.stringify(postData), 
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const result = await response.json();
+
+      console.log(result);
+      login(result);
+      if (result.account_type == "student") {
+        navigate('/student-page');
+      } else {
+        navigate('/teacher-page');
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    } 
+  };
+
+  const handleClick = (e) => {
+    e.preventDefault();
+    fetchData();
   };
 
   return (
@@ -28,8 +60,8 @@ function Login() {
                 name="email" 
                 required 
                 placeholder="Email or Username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 />
                 
             </div>
