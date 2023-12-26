@@ -11,7 +11,8 @@ import { Dissertation_request } from './models/dissertation_request.js'
 const app = express()
 
 // Define entities relationship
-User.hasMany(Dissertation_request);
+User.hasMany(Dissertation_request,{ as: 'teacherRequests', foreignKey: 'teacher_id' });
+User.hasMany(Dissertation_request,{ as: 'studentRequests', foreignKey: 'student_id' });
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true}))

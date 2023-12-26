@@ -1,22 +1,72 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import '../css/main.css';
 import '../css/request-page.css';
 import { useAuth } from '../helpers/authContext';
 
 function StudentPage() {
   const { user } = useAuth();
+  const [dissertationTopic, setDissertationTopic] = useState('');
+  const [teacherId, setTeacherId] = useState(null);
 
     useEffect(() => {
       if (!user) {
         return;
       }
-      fetchData();
 
+      fetchData().then((result) => {
+        console.log('Data fetched successfully:', result);
+        const teacherList = document.getElementById('available-teacher-list');
+          const teachers = result;
+      
+          teacherList.innerHTML = "";
+          teachers.forEach((teacher) => {
+            const liElement = document.createElement('li');
+
+            const spanName = document.createElement('span');
+            spanName.innerHTML = teacher.name;
+            spanName.classList.add('teacher-list-span');
+            
+            const spanNumber = document.createElement('span');
+            spanNumber.innerHTML = teacher.student_number + ' locuri disponibile';
+            spanNumber.classList.add('teacher-list-span');
+
+            liElement.appendChild(spanName);
+            liElement.appendChild(spanNumber);
+
+            const sendRequestBtn = document.createElement("button");
+            sendRequestBtn.classList.add('button-30');
+            sendRequestBtn.classList.add('open-popup-btn');
+            sendRequestBtn.dataset.teacher = teacher.id;
+            sendRequestBtn.innerHTML = "Trimite Cerere";
+            liElement.appendChild(sendRequestBtn);
+            if (teacher.student_number === 0) {
+              sendRequestBtn.style.visibility = 'hidden';
+            }
+      
+            teacherList.appendChild(liElement);
+          });
+
+          const openPopupBtns = document.querySelectorAll('.open-popup-btn');
+          console.log(openPopupBtns);
+          openPopupBtns.forEach(btn => {
+            console.log(btn);
+            btn.addEventListener('click', () => {
+              
+              setTeacherId(btn.dataset.teacher);
+              openPopup();
+            })
+          });
+      }).catch((error) => {
+        console.error('Error fetching data:', error);
+      });
+      
       const confirmSendBtn = document.getElementById('send-request-btn');
       confirmSendBtn.addEventListener('click', sendRequest);
-    }, [])
+      
+    }, []);
 
       function openPopup() {
+        console.log('here');
         document.getElementById('overlay').style.display = 'flex';
         document.querySelector('#close-btn').addEventListener('click', closePopup);
       }
@@ -45,39 +95,38 @@ function StudentPage() {
           }
     
           const result = await response.json();
-          console.log(result);
-    
-          const teacherList = document.getElementById('available-teacher-list');
-          const teachers = result;
-          console.log(teachers);
-      
-          teacherList.innerHTML = "";
-          teachers.forEach((teacher) => {
-            const liElement = document.createElement('li');
-
-            const spanName = document.createElement('span');
-            spanName.innerHTML = teacher.name;
-            spanName.classList.add('teacher-list-span');
-            
-            const spanNumber = document.createElement('span');
-            spanNumber.innerHTML = teacher.student_number + ' locuri disponibile';
-            spanNumber.classList.add('teacher-list-span');
-
-            liElement.appendChild(spanName);
-            liElement.appendChild(spanNumber);
-
-            const sendRequestBtn = document.createElement("button");
-            sendRequestBtn.classList.add('button-30');
-            sendRequestBtn.innerHTML = "Trimite Cerere";
-            sendRequestBtn.addEventListener('click', openPopup);
-            liElement.appendChild(sendRequestBtn);
-            if (teacher.student_number === 0) {
-              sendRequestBtn.style.visibility = 'hidden';
-            }
-      
-            teacherList.appendChild(liElement);
-          });
+          return result;
           
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        } 
+      };
+
+      const sendDissertationRequest = async () => {
+        try {
+              const postData = {
+                teacher_id: teacherId,
+                student_id: user.id,
+                title: dissertationTopic
+              };
+              console.log(postData);
+    
+              const response = await fetch('http://localhost:5000/api/dissertation-request/send', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json', 
+                },
+                body: JSON.stringify(postData), 
+              });
+    
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+    
+          const result = await response.json();
+          console.log(result);
+          return result;
+
         } catch (error) {
           console.error('Error fetching data:', error);
         } 
@@ -99,8 +148,14 @@ function StudentPage() {
             <span className="close-btn" id='close-btn'>X</span>
             <h2>Cerere disertație</h2>
             <p>Introduceți tema dorită mai jos.</p>
-            <input type='text' placeholder='Tema'></input>
-            <button className='button-30' id='send-request-btn'>Trimite</button>
+            <input 
+            type='text' 
+            placeholder='Tema' 
+            id='dissertation-topic' 
+            required
+            value={dissertationTopic}
+            onChange={(e) => setDissertationTopic(e.target.value)}></input>
+            <button className='button-30' id='send-request-btn' onClick={sendDissertationRequest}>Trimite</button>
           </div>
         </div>
 
