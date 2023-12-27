@@ -102,11 +102,11 @@ function TeacherPage() {
             <h2>Sesiune nouă</h2>
             <p>Introduceți data de început și cea de final.</p>
             <div>
-              <label>Dată început: </label>
+              <div>Dată început: </div>
               <input type="datetime-local" />
             </div>
             <div>
-              <label>Dată sfârșit: </label>
+              <div>Dată sfârșit: </div>
               <input type="datetime-local" />
             </div>
             <button className='button-30' id='send-request-btn' onClick={saveSession}>Salvează</button>

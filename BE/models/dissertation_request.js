@@ -16,7 +16,7 @@ const Dissertation_request = sequelize.define(
         },
         teacher_name: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: true,
         },
         status: {
             type: DataTypes.STRING,

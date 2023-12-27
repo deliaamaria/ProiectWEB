@@ -6,7 +6,10 @@ import { useAuth } from '../helpers/authContext';
 function StudentPage() {
   const { user } = useAuth();
   const [dissertationTopic, setDissertationTopic] = useState('');
-  const [teacherId, setTeacherId] = useState(null);
+  const [sessionId, setSessionId] = useState(null);
+  const [teacher, setTeacher] = useState(null);
+  
+  let teacherId;
 
     useEffect(() => {
       if (!user) {
@@ -49,12 +52,32 @@ function StudentPage() {
           const openPopupBtns = document.querySelectorAll('.open-popup-btn');
           console.log(openPopupBtns);
           openPopupBtns.forEach(btn => {
-            console.log(btn);
             btn.addEventListener('click', () => {
               
-              setTeacherId(btn.dataset.teacher);
+              teacherId = btn.dataset.teacher;
+              setTeacher(teacherId);
               openPopup();
-            })
+
+              getTeacherSessions().then((result) => {
+                console.log(result)
+                const dropdown = document.getElementById('session-list');
+                dropdown.innerHTML = '';
+                const option = document.createElement('option');
+                option.text = 'Sesiune';
+                dropdown.add(option);
+
+                // Add new options
+                result.forEach(item => {
+                    const option = document.createElement('option');
+                    option.value = item.id;
+                    option.text = item.start_date + ' - ' + item.end_date;
+                    dropdown.add(option);
+                });
+
+              }).catch((error) => {
+                console.error('Error fetching data:', error);
+              });
+            });
           });
       }).catch((error) => {
         console.error('Error fetching data:', error);
@@ -66,7 +89,6 @@ function StudentPage() {
     }, []);
 
       function openPopup() {
-        console.log('here');
         document.getElementById('overlay').style.display = 'flex';
         document.querySelector('#close-btn').addEventListener('click', closePopup);
       }
@@ -102,16 +124,40 @@ function StudentPage() {
         } 
       };
 
+      const getTeacherSessions = async () => {
+        try {
+          console.log(teacherId);
+          const response = await fetch('http://localhost:5000/api/filterSessions?teacher_id=' + teacherId, {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json', 
+              } 
+          });
+    
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+    
+          const result = await response.json();
+          return result;
+          
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        } 
+      };
+
       const sendDissertationRequest = async () => {
         try {
               const postData = {
-                teacher_id: teacherId,
+                teacher_id: teacher,
                 student_id: user.id,
-                title: dissertationTopic
+                title: dissertationTopic,
+                session_id: sessionId,
+                student_name: user.name,
+                status: 'in asteptare'
               };
-              console.log(postData);
     
-              const response = await fetch('http://localhost:5000/api/dissertation-request/send', {
+              const response = await fetch('http://localhost:5000/api/newRequest', {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json', 
@@ -155,6 +201,13 @@ function StudentPage() {
             required
             value={dissertationTopic}
             onChange={(e) => setDissertationTopic(e.target.value)}></input>
+
+          <div>
+            <div>Selectează sesiunea dorită: </div>
+            <select id='session-list' value={sessionId} onChange={(e) => {setSessionId(e.target.value);console.log(e.target.value)}}>
+            </select>
+          </div>
+
             <button className='button-30' id='send-request-btn' onClick={sendDissertationRequest}>Trimite</button>
           </div>
         </div>

@@ -90,11 +90,17 @@ const deleteRequests = async (req, res) => {
 const filterRequestsFromDB = async (req, res) => {
   try {
     const status = req.query.status;
+    const teacherId = req.query.teacherId;
     let whereClause = {};
     
     if (status) {
       // Dacă există un tip de cont specificat, adaugă condiția în whereClause
       whereClause.status = status;
+    }
+
+    if (teacherId) {
+      // Dacă există un tip de cont specificat, adaugă condiția în whereClause
+      whereClause.teacher_id = teacherId;
     }
     
     const requests = await Dissertation_request.findAll({

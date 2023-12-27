@@ -116,3 +116,9 @@ li {
     margin-left: 42%;
     margin-top: 10%;
 }
+
+#session-list {
+  width: auto;
+  max-width: 20vw;
+  margin-top: 5px;
+}
