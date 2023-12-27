@@ -91,6 +91,8 @@ const filterRequestsFromDB = async (req, res) => {
   try {
     const status = req.query.status;
     const teacherId = req.query.teacherId;
+    const studentId = req.query.studentId;
+
     let whereClause = {};
     
     if (status) {
@@ -99,8 +101,11 @@ const filterRequestsFromDB = async (req, res) => {
     }
 
     if (teacherId) {
-      // Dacă există un tip de cont specificat, adaugă condiția în whereClause
       whereClause.teacher_id = teacherId;
+    }
+
+    if (studentId) {
+      whereClause.student_id = studentId;
     }
     
     const requests = await Dissertation_request.findAll({

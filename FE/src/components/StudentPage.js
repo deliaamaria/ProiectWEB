@@ -82,7 +82,40 @@ function StudentPage() {
       }).catch((error) => {
         console.error('Error fetching data:', error);
       });
+
+      getAcceptedRequests().then((result) => {
+        console.log(result);
+        console.log('Data fetched successfully:', result);
+        const acceptedList = document.getElementById('first-phase-accepted');
       
+          acceptedList.innerHTML = "";
+          result.forEach((request) => {
+            console.log(request.id);
+            const liElement = document.createElement('li');
+            
+            const spanTitle = document.createElement('span');
+            spanTitle.innerHTML = request.title;
+            spanTitle.classList.add('teacher-list-span');
+
+            const spanSession = document.createElement('span');
+            spanSession.innerHTML = request.session_id;
+            spanSession.classList.add('teacher-list-span');
+            
+            liElement.appendChild(spanTitle);
+            liElement.appendChild(spanSession);
+
+            const uploadFileBtn = document.createElement("button");
+            uploadFileBtn.innerHTML = "Încarcă fișier";
+            uploadFileBtn.classList.add('button-30');
+            liElement.appendChild(uploadFileBtn);
+      
+            acceptedList.appendChild(liElement);
+
+          });
+      }).catch((error) => {
+        console.error('Error fetching data:', error);
+      });
+    
       const confirmSendBtn = document.getElementById('send-request-btn');
       confirmSendBtn.addEventListener('click', sendRequest);
       
@@ -173,6 +206,27 @@ function StudentPage() {
           console.log(result);
           return result;
 
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        } 
+      };
+
+      const getAcceptedRequests = async () => {
+        try {
+          const response = await fetch('http://localhost:5000/api/filterRequests?studentId=' + user.id + '&status=acceptata', {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json', 
+              } 
+          });
+    
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+    
+          const result = await response.json();
+          return result;
+          
         } catch (error) {
           console.error('Error fetching data:', error);
         } 
