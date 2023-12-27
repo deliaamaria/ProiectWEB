@@ -122,3 +122,8 @@ li {
   max-width: 20vw;
   margin-top: 5px;
 }
+
+.upload-file {
+  margin-top: 20px;
+  margin-left: auto;
+}

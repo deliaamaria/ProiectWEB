@@ -20,7 +20,7 @@ const Dissertation_request = sequelize.define(
         },
         status: {
             type: DataTypes.STRING,
-            values: ["in asteptare", "acceptata", "respinsa"],
+            values: ["in asteptare", "acceptata", "respinsa", "fisier incarcat", "finalizata"],
         },
         title: {
             type: DataTypes.STRING(150)

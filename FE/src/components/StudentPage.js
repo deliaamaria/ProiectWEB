@@ -104,13 +104,32 @@ function StudentPage() {
             liElement.appendChild(spanTitle);
             liElement.appendChild(spanSession);
 
+            const inputFile = document.createElement("input");
+            inputFile.type = 'file';
+            liElement.appendChild(inputFile);
+
             const uploadFileBtn = document.createElement("button");
             uploadFileBtn.innerHTML = "Încarcă fișier";
+            uploadFileBtn.classList.add('upload-file');
             uploadFileBtn.classList.add('button-30');
             liElement.appendChild(uploadFileBtn);
       
             acceptedList.appendChild(liElement);
 
+            uploadFileBtn.addEventListener('click', () => {
+              if (inputFile.files.length > 0) {
+                // Access the selected file
+                const selectedFile = inputFile.files[0];
+        
+                // Log or use the selected file
+                console.log('Selected File:', selectedFile);
+                handleUpload(selectedFile);
+                updateRequest(request.id);
+                liElement.style.display = 'none';
+              } else {
+                console.warn('No file selected.');
+              }
+            });
           });
       }).catch((error) => {
         console.error('Error fetching data:', error);
@@ -231,6 +250,57 @@ function StudentPage() {
           console.error('Error fetching data:', error);
         } 
       };
+
+      const handleUpload = async (selectedFile) => {
+        if (selectedFile) {
+          try {
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+    
+            const response = await fetch('http://localhost:5000/api/upload', {
+              method: 'POST',
+              body: formData,
+            });
+    
+            if (response.ok) {
+              console.log('File uploaded successfully!');
+            } else {
+              console.error('Failed to upload file.');
+            }
+          } catch (error) {
+            console.error('Error uploading file:', error);
+          }
+        } else {
+          console.warn('No file selected for upload.');
+        }
+      };
+
+      const updateRequest = async (requestId) => {
+        try {
+          const postData = {
+            status : "fisier incarcat"
+          };
+          console.log(postData);
+          const response = await fetch('http://localhost:5000/api/dissertation_requests/' + requestId, {
+              method: 'PUT',
+              headers: {
+                'Content-Type': 'application/json', 
+              },
+              body: JSON.stringify(postData) 
+          });
+    
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+    
+          const result = await response.json();
+          console.log(result);
+          return result;
+          
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        } 
+      };    
 
       if (!user) {
         return <div>User not authenticated</div>;
