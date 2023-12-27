@@ -16,6 +16,23 @@ function StudentPage() {
         return;
       }
 
+      getFinalRequest().then((result) => {
+        console.log('Data fetched successfully:', result);
+        if (result !== null && result.length > 0) {
+          const finalRequest = result[0];
+          // TODO de adaugat clasa si stilizat
+          const pElement = document.createElement('p');
+          pElement.innerHTML = 'Cererea de dissertație aprobată este ' + finalRequest.title + " - " + finalRequest.session_id;
+          document.getElementById('main-div').innerHTML = '';
+          document.getElementById('main-div').appendChild(pElement);
+          const contentDivs = document.getElementsByClassName('content-div');
+          Array.from(contentDivs).forEach(div => div.style.display = 'none');
+        }
+        
+      }).catch((error) => {
+        console.error('Error fetching data:', error);
+      });
+
       fetchData().then((result) => {
         console.log('Data fetched successfully:', result);
         const teacherList = document.getElementById('available-teacher-list');
@@ -251,6 +268,28 @@ function StudentPage() {
         } 
       };
 
+      const getFinalRequest = async () => {
+        try {
+          const response = await fetch('http://localhost:5000/api/filterRequests?studentId=' + user.id + '&status=finalizata', {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json', 
+              } 
+          });
+    
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+    
+          const result = await response.json();
+          console.log(result);
+          return result;
+          
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        } 
+      };
+
       const handleUpload = async (selectedFile) => {
         if (selectedFile) {
           try {
@@ -307,7 +346,7 @@ function StudentPage() {
       }
 
     return (
-      <div>
+      <div id='main-div'>
         <div className='content-div'>
           <h1>Lista de profesori</h1>
           <ul id='available-teacher-list'>

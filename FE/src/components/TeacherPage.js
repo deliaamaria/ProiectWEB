@@ -13,6 +13,7 @@ function TeacherPage() {
       return;
     }
 
+    // TODO de validat ca field-urile de tip input sa fie completate + mesaje specifice 
     const acceptedRequestList = document.getElementById('second-phase-accepted');
     const requestList = document.getElementById('requests-list');
     const finalRequestList = document.getElementById('final-requests-list');

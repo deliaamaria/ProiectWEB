@@ -48,6 +48,7 @@ function Login() {
     fetchData();
   };
 
+  //TODO de gestionat situatia in care login ul nu e corect (redirectionarea oricum nu se face, dar ar fi ok sa se afiseze ceva)
   return (
     <div className="Login">
       <div className="login-box">
