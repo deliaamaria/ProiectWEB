@@ -183,41 +183,50 @@ function StudentPage() {
       }
 
     return (
-      <div className='content-div'>
-        <h1>Lista de profesori</h1>
-        <ul id='available-teacher-list'>
+      <div>
+        <div className='content-div'>
+          <h1>Lista de profesori</h1>
+          <ul id='available-teacher-list'>
 
-        </ul>
+          </ul>
 
-        <div className="overlay" id="overlay">
-          <div className="popup">
-            <span className="close-btn" id='close-btn'>X</span>
-            <h2>Cerere disertație</h2>
-            <p>Introduceți tema dorită mai jos.</p>
-            <input 
-            type='text' 
-            placeholder='Tema' 
-            id='dissertation-topic' 
-            required
-            value={dissertationTopic}
-            onChange={(e) => setDissertationTopic(e.target.value)}></input>
+          <div className="overlay" id="overlay">
+            <div className="popup">
+              <span className="close-btn" id='close-btn'>X</span>
+              <h2>Cerere disertație</h2>
+              <p>Introduceți tema dorită mai jos.</p>
+              <input 
+              type='text' 
+              placeholder='Tema' 
+              id='dissertation-topic' 
+              required
+              value={dissertationTopic}
+              onChange={(e) => setDissertationTopic(e.target.value)}></input>
 
-          <div>
-            <div>Selectează sesiunea dorită: </div>
-            <select id='session-list' value={sessionId} onChange={(e) => {setSessionId(e.target.value);console.log(e.target.value)}}>
-            </select>
+            <div>
+              <div>Selectează sesiunea dorită: </div>
+              <select id='session-list' value={sessionId} onChange={(e) => {setSessionId(e.target.value);console.log(e.target.value)}}>
+              </select>
+            </div>
+
+              <button className='button-30' id='send-request-btn' onClick={sendDissertationRequest}>Trimite</button>
+            </div>
           </div>
 
-            <button className='button-30' id='send-request-btn' onClick={sendDissertationRequest}>Trimite</button>
+          <div className="overlay" id="overlay-success">
+            <div className="popup">
+              <span className="close-btn" id='close-success-popup-btn'>X</span>
+              <h2>Cererea a fost trimisa cu succes</h2>
+              <p>Așteptați răspunsul profesorului selectat.</p>
+            </div>
           </div>
         </div>
 
-        <div className="overlay" id="overlay-success">
-          <div className="popup">
-            <span className="close-btn" id='close-success-popup-btn'>X</span>
-            <h2>Cererea a fost trimisa cu succes</h2>
-            <p>Așteptați răspunsul profesorului selectat.</p>
-          </div>
+        <div className='content-div'>
+          <h1>Cereri acceptate</h1>
+          <ul id='first-phase-accepted'>
+
+          </ul>
         </div>
       </div>
     );
