@@ -13,7 +13,7 @@ function TeacherPage() {
       return;
     }
 
-    // TODO de validat ca field-urile de tip input sa fie completate + mesaje specifice 
+    // TODO de validat ca field-urile de tip input sa fie completate + un comportament specific (sa se afiseze ceva, sa se coloreze cu rosu etc.)
     const acceptedRequestList = document.getElementById('second-phase-accepted');
     const requestList = document.getElementById('requests-list');
     const finalRequestList = document.getElementById('final-requests-list');
@@ -176,8 +176,14 @@ function TeacherPage() {
         });
 
         rejectBtn.addEventListener('click', () => {
-          updateRequest('respinsa',finalRequest.id);
-          liElement.style.display = 'none';
+          openRejectPopup();
+          
+          document.getElementById('final-reject-btn').addEventListener('click', () => {
+            const rejectMessage = document.getElementById('reject-message').value;
+            updateRequest('respinsa',finalRequest.id, rejectMessage);
+            liElement.style.display = 'none';
+            closePopup();
+          })
         });
 
         let sessionDiv = document.getElementById('session-' + finalRequest.session_id);
@@ -220,6 +226,7 @@ function TeacherPage() {
   function closePopup() {
     document.getElementById('overlay').style.display = 'none';
     document.getElementById('overlay-success').style.display = 'none';
+    document.getElementById('overlay-reject').style.display = 'none';
   }
 
   const getTeacherRequests = async (status) => {
@@ -272,10 +279,11 @@ function TeacherPage() {
     } 
   };
 
-  const updateRequest = async (status, requestId) => {
+  const updateRequest = async (status, requestId, rejectMessage = '') => {
     try {
       const postData = {
-        status : status
+        status : status,
+        reject_message : rejectMessage
       };
       console.log(postData);
       const response = await fetch('http://localhost:5000/api/dissertation_requests/' + requestId, {
@@ -349,6 +357,11 @@ function TeacherPage() {
     } 
   };
 
+  function openRejectPopup() {
+    document.getElementById('overlay-reject').style.display = 'flex';
+    document.querySelector('#close-reject-popup-btn').addEventListener('click', closePopup);
+  }
+
   if (!user) {
     return <div>User not authenticated</div>;
   }
@@ -407,6 +420,19 @@ function TeacherPage() {
           <ul id='second-phase-accepted'>
 
           </ul>
+        </div>
+
+        <div className="overlay" id="overlay-reject">
+          <div className="popup">
+            <span className="close-btn" id='close-reject-popup-btn'>X</span>
+            <h2>Introduceți motivul respingerii</h2>
+            <input 
+            type='text'
+            required
+            id='reject-message'
+            ></input>
+            <div><button className='button-30' id='final-reject-btn'>Respinge</button></div>
+          </div>
         </div>
       </div>
     );

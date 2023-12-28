@@ -23,8 +23,13 @@ const Dissertation_request = sequelize.define(
             values: ["in asteptare", "acceptata", "respinsa", "fisier incarcat", "finalizata"],
         },
         title: {
-            type: DataTypes.STRING(150)
-        },       
+            type: DataTypes.STRING(150),
+            allowNull: false
+        },   
+        reject_message: {
+            type: DataTypes.STRING(150),
+            allowNull: true
+        }    
     },
     {
         tableName: 'Dissertation_requests',
