@@ -41,10 +41,10 @@ function TeacherPage() {
       
         liElement.appendChild(spanTitle);
 
-        let sessionDiv = document.getElementById('session-' + reqest.session_id);
+        let sessionDiv = document.getElementById('session-accepted' + reqest.session_id);
         if (!sessionDiv) {
           sessionDiv = document.createElement('div');
-          sessionDiv.id = 'session-' + reqest.session_id;
+          sessionDiv.id = 'session-accepted' + reqest.session_id;
           sessionDiv.innerHTML += 'session-' + reqest.session_id;
 
           acceptedRequestList.appendChild(sessionDiv);
@@ -186,10 +186,10 @@ function TeacherPage() {
           })
         });
 
-        let sessionDiv = document.getElementById('session-' + finalRequest.session_id);
+        let sessionDiv = document.getElementById('session-final' + finalRequest.session_id);
         if (!sessionDiv) {
           sessionDiv = document.createElement('div');
-          sessionDiv.id = 'session-' + finalRequest.session_id;
+          sessionDiv.id = 'session-final' + finalRequest.session_id;
           sessionDiv.innerHTML += 'session-' + finalRequest.session_id;
 
           finalRequestList.appendChild(sessionDiv);
