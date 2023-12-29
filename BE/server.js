@@ -14,7 +14,7 @@ const app = express()
 User.hasMany(Dissertation_request, { as: 'teacherRequests', foreignKey: 'teacher_id'});
 User.hasMany(Dissertation_request, { as: 'studentRequests', foreignKey: 'student_id'});
 User.hasMany(Session, { as: 'teacherSessions', foreignKey: 'teacher_id'});
-Dissertation_request.hasOne(Session);
+Session.hasMany(Dissertation_request, { as: 'sessionDissertation', foreignKey: 'session_id'});
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true}))

@@ -16,15 +16,20 @@ const Dissertation_request = sequelize.define(
         },
         teacher_name: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: true,
         },
         status: {
             type: DataTypes.STRING,
-            values: ["in asteptare", "acceptata", "respinsa"],
+            values: ["in asteptare", "acceptata", "respinsa", "fisier incarcat", "finalizata"],
         },
         title: {
-            type: DataTypes.STRING(150)
-        },       
+            type: DataTypes.STRING(150),
+            allowNull: false
+        },   
+        reject_message: {
+            type: DataTypes.STRING(150),
+            allowNull: true
+        }    
     },
     {
         tableName: 'Dissertation_requests',

@@ -2,6 +2,9 @@ import React, {useState} from 'react';
 import "../css/login.css"
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../helpers/authContext';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 function Login() {
   const navigate = useNavigate();
@@ -10,8 +13,19 @@ function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+
   const fetchData = async () => {
     try {
+          if (!email.trim()) {
+            toast.error('Email is required');
+            return;
+          }
+
+          if (!password.trim()) {
+            toast.error('Password is required');
+            return;
+          }
+
           const postData = {
             email: email,
             password: password
@@ -40,6 +54,7 @@ function Login() {
       }
     } catch (error) {
       console.error('Error fetching data:', error);
+      toast.error('Invalid email or password');
     } 
   };
 
@@ -48,6 +63,7 @@ function Login() {
     fetchData();
   };
 
+  //TODO de gestionat situatia in care login ul nu e corect (redirectionarea oricum nu se face, dar ar fi ok sa se afiseze ceva)
   return (
     <div className="Login">
       <div className="login-box">
@@ -63,7 +79,7 @@ function Login() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 />
-                
+
             </div>
             <div>
                 <input 
@@ -80,6 +96,7 @@ function Login() {
         </form>
 
       </div>
+      <ToastContainer />
     </div>
   );
 }

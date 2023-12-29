@@ -116,3 +116,14 @@ li {
     margin-left: 42%;
     margin-top: 10%;
 }
+
+#session-list {
+  width: auto;
+  max-width: 20vw;
+  margin-top: 5px;
+}
+
+.upload-file {
+  margin-top: 20px;
+  margin-left: auto;
+}
