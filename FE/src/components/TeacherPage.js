@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import '../css/main.css';
 import '../css/request-page.css';
 import { useAuth } from '../helpers/authContext';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function TeacherPage() {
   const { user } = useAuth();
@@ -172,6 +174,7 @@ function TeacherPage() {
             liElement.style.display = 'none';
           } else {
             console.warn('No file selected.');
+            toast.warning('Niciun fisier selectat');
           }
         });
 
@@ -211,8 +214,8 @@ function TeacherPage() {
 
   function saveSession() {
     addSession();
-    document.getElementById('overlay-success').style.display = 'flex';
-    document.querySelector('#close-success-popup-btn').addEventListener('click', closePopup);
+    // document.getElementById('overlay-success').style.display = 'flex';
+    // document.querySelector('#close-success-popup-btn').addEventListener('click', closePopup);
   }
 
   function acceptOrDeclineRequest(e) {
@@ -252,6 +255,12 @@ function TeacherPage() {
 
   const addSession = async () => {
     try {
+    if(!startDate || !endDate || startDate > endDate)
+    {
+      toast.error('Date incorecte');
+      return;
+    }
+    
       const postData = {
         teacher_id: user.id,
         start_date: startDate,
@@ -272,6 +281,7 @@ function TeacherPage() {
 
       const result = await response.json();
       console.log(result);
+      toast.success('Sesiune salvata');
       return result;
       
     } catch (error) {
@@ -320,6 +330,7 @@ function TeacherPage() {
 
         if (response.ok) {
           console.log('File uploaded successfully!');
+          toast.success('Fiser incarcat');
         } else {
           console.error('Failed to upload file.');
         }
@@ -434,6 +445,7 @@ function TeacherPage() {
             <div><button className='button-30' id='final-reject-btn'>Respinge</button></div>
           </div>
         </div>
+        <ToastContainer/>
       </div>
     );
   }

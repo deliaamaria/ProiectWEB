@@ -148,6 +148,7 @@ function StudentPage() {
                 liElement.style.display = 'none';
               } else {
                 console.warn('No file selected.');
+                toast.warning('Nu ati ales niciun fisier');
               }
             });
           });
@@ -292,6 +293,7 @@ function StudentPage() {
     
           const result = await response.json();
           console.log(result);
+          toast.success('Cerere trimisa');
           return result;
         
         } catch (error) {
@@ -357,6 +359,7 @@ function StudentPage() {
     
             if (response.ok) {
               console.log('File uploaded successfully!');
+              toast.success('Fisier incarcat');
             } else {
               console.error('Failed to upload file.');
             }
