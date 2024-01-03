@@ -127,3 +127,26 @@ li {
   margin-top: 20px;
   margin-left: auto;
 }
+
+@media (max-width: 750px) {
+  .student-list-span, .teacher-list-span {
+      width: 60%; 
+      margin: 0.5rem 0; 
+  }
+
+  .button-30 {
+      width: 60%; 
+      max-width: none; 
+      margin-top: 10px; 
+  }
+
+  .popup {
+      width: 80vw; 
+      height: 60vh; 
+  }
+
+  #send-request-btn {
+      margin-left: 30%; 
+      margin-top: 5%; 
+  }
+}

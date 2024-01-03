@@ -26,8 +26,9 @@ function StudentPage() {
           // TODO de adaugat clasa si stilizat
           const pElement = document.createElement('p');
           pElement.innerHTML = 'Cererea de dissertație aprobată este ' + finalRequest.title + " - " + finalRequest.session_id;
+          if (document.getElementById('main-div')) {
           document.getElementById('main-div').innerHTML = '';
-          document.getElementById('main-div').appendChild(pElement);
+          document.getElementById('main-div').appendChild(pElement);}
           const contentDivs = document.getElementsByClassName('content-div');
           Array.from(contentDivs).forEach(div => div.style.display = 'none');
         }
@@ -41,6 +42,7 @@ function StudentPage() {
         const teacherList = document.getElementById('available-teacher-list');
           const teachers = result;
       
+          if(teacherList){
           teacherList.innerHTML = "";
           teachers.forEach((teacher) => {
             const liElement = document.createElement('li');
@@ -108,7 +110,7 @@ function StudentPage() {
               });
             }
             });
-          });
+          });}
       }).catch((error) => {
         console.error('Error fetching data:', error);
       });
@@ -117,7 +119,7 @@ function StudentPage() {
         console.log(result);
         console.log('Data fetched successfully:', result);
         const acceptedList = document.getElementById('first-phase-accepted');
-      
+          if(acceptedList){
           acceptedList.innerHTML = "";
           result.forEach((request) => {
             console.log(request.id);
@@ -161,7 +163,7 @@ function StudentPage() {
                 toast.warning('Nu ati ales niciun fisier');
               }
             });
-          });
+          });}
       }).catch((error) => {
         console.error('Error fetching data:', error);
       });
@@ -462,7 +464,7 @@ function StudentPage() {
 
             <div>
               <div>Selectează sesiunea dorită: </div>
-              <select id='session-list' required value={sessionId} onChange={(e) => {setSessionId(e.target.value);console.log(e.target.value)}}>
+              <select id='session-list' required value={sessionId || ''} onChange={(e) => {setSessionId(e.target.value);console.log(e.target.value)}}>
               </select>
             </div>
 

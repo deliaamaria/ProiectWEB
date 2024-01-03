@@ -6,3 +6,10 @@
     margin: 0.9rem 5rem;
     padding: 2rem;
 }
+
+@media (max-width: 750px) {
+    .content-div {
+        margin: 0.9rem 1rem; 
+        padding: 1rem; 
+    }
+}

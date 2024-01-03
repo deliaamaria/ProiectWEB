@@ -8,3 +8,10 @@
     font-size: x-large;
     padding: 2% 0 0 2%;
 }
+
+@media (max-width: 600px) {
+    .nav {
+        font-size: large;
+        height: 4vh;
+    }
+}
