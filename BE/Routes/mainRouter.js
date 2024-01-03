@@ -28,7 +28,7 @@ router.post("/newRequest", dissertationRequestController.insertRequestsIntoDB);
 router.get("/dissertation_requests/:requestId", dissertationRequestController.getRequestsFromDBById);
 router.put("/dissertation_requests/:requestId", dissertationRequestController.updateRequestsById); // update is associated to the HTTP PUT method
 router.delete("/dissertation_requests/:requestId", dissertationRequestController.deleteRequests); // delete is associated to the HTTP DELETE method
-
+router.get("/checkExistingRequest", dissertationRequestController.CheckExistingRequest);
 
 router.post("/NewSession", sessionController.createSession);
 router.get("/sessions", sessionController.getAllSessionsFromDB);

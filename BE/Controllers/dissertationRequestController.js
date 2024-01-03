@@ -118,11 +118,31 @@ const filterRequestsFromDB = async (req, res) => {
   }
 }
 
+const CheckExistingRequest = async (req, res) => {
+  try {
+    const teacherId = req.query.teacherId;
+    const studentId = req.query.studentId;
+
+    const existingRequest = await Dissertation_request.findOne({
+      where: {
+        teacher_id: teacherId,
+        student_id: studentId,
+      },
+    });
+
+    return res.status(200).json({ exists: existingRequest !== null });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+};
+
+
 export {
   getAllRequestsFromDB,
   getRequestsFromDBById,
   filterRequestsFromDB,
   insertRequestsIntoDB,
   updateRequestsById,
-  deleteRequests
+  deleteRequests,
+  CheckExistingRequest
 }

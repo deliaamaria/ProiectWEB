@@ -62,21 +62,30 @@ function StudentPage() {
             sendRequestBtn.dataset.teacher = teacher.id;
             sendRequestBtn.innerHTML = "Trimite Cerere";
             liElement.appendChild(sendRequestBtn);
-            if (teacher.student_number === 0) {
+            if (teacher.student_number === 0 || teacher.student_number === null) {
               sendRequestBtn.style.visibility = 'hidden';
             }
-      
+
             teacherList.appendChild(liElement);
           });
 
           const openPopupBtns = document.querySelectorAll('.open-popup-btn');
           console.log(openPopupBtns);
           openPopupBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
+            btn.addEventListener('click', async () => {
               
               teacherId = btn.dataset.teacher;
-              setTeacher(teacherId);
-              openPopup();
+              // Verifică dacă studentul a trimis deja cerere la profesor
+              const existingRequest = await checkExistingRequest(user.id, teacherId);  
+              console.log("student id", user.id);   
+              console.log("teacher id", teacherId);
+              console.log("existingRequest", existingRequest);    
+              if (existingRequest) {
+                // Există deja o cerere
+                toast.error('Ați trimis deja o cerere la profesorul respectiv.');
+              } else {
+                setTeacher(teacherId);
+                openPopup();
 
               getTeacherSessions().then((result) => {
                 console.log(result)
@@ -97,6 +106,7 @@ function StudentPage() {
               }).catch((error) => {
                 console.error('Error fetching data:', error);
               });
+            }
             });
           });
       }).catch((error) => {
@@ -173,6 +183,7 @@ function StudentPage() {
         // Detașează ascultătorul de evenimente pentru a evita memory leak.
         confirmSendBtn.removeEventListener('click', sendRequestHandler);
       };
+
     }, [dissertationTopic, sessionId, hasErrorNotification]);
 
       function openPopup() {
@@ -200,6 +211,31 @@ function StudentPage() {
       function resetForm() {
         setDissertationTopic('');
         setSessionId(null);
+      }
+
+      // Funcție pentru a verifica existența unei cereri în funcție de student_id și teacher_id
+      async function checkExistingRequest(studentId, teacherId) {
+        try {
+          console.log("Checking existing request:", studentId, teacherId);
+          const response = await fetch(`http://localhost:5000/api/checkExistingRequest?studentId=${studentId}&teacherId=${teacherId}`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+
+          const result = await response.json();
+          console.log("result", result);
+          console.log(result.exists);
+          return result.exists;
+        } catch (error) {
+          console.error('Error checking existing request:', error);
+          return false;
+        }
       }
 
       const fetchData = async () => {
