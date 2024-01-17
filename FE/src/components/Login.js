@@ -75,7 +75,7 @@ function Login() {
                 id="email" 
                 name="email" 
                 required 
-                placeholder="Email or Username"
+                placeholder="Email Address"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 />
